@@ -153,20 +153,20 @@ classDiagram
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=440&size=22&pause=1000&color=38F77CFF&center=false&vCenter=false&repeat=false&width=435&lines=Diagrama de Uso" alt="Typing SVG" /></a>
 ```mermaid
-flowchart TD
-    A[Administrador] -->|Gerenciar Grupos| B(Gerenciar Grupos)
-    B -->|Adicionar Membros| C(Adicionar Membros ao Grupo)
-    B -->|Remover Membros| D(Remover Membros do Grupo)
-    A -->|Excluir Tarefas| E(Excluir Tarefas)
-    A -->|Gerenciar Tarefas| F(Gerenciar Tarefas)
-    
-    G[Grupo] -->|Visualizar Tarefas| H(Visualizar Tarefas)
-    J[Usuário] -->|Editar Tarefas| I(Editar Tarefas)
-    I -->|Marcar como Concluída| J1(Marcar Tarefas como Concluídas)
-    J -->|Criar Tarefas| K(Criar Tarefas)
-    
-    L[Usuário] -->|Registrar-se| M(Registrar-se)
-    M -->|Fazer Login| N(Fazer Login)
+usecaseDiagram
+    actor "Usuário" as U
+    actor "Administrador" as A
+
+    U --> (Registrar-se)
+    U --> (Login)
+    U --> (Criar Enquete)
+    U --> (Votar em Enquete)
+    U --> (Visualizar Resultados)
+    U --> (Gerenciar Enquetes)
+
+    A --> (Gerenciar Usuários)
+    A --> (Gerenciar Enquetes)
+
 ```
 <br><br><br><br><br>
 
