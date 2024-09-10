@@ -153,20 +153,25 @@ classDiagram
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=440&size=22&pause=1000&color=38F77CFF&center=false&vCenter=false&repeat=false&width=435&lines=Diagrama de Uso" alt="Typing SVG" /></a>
 ```mermaid
-usecaseDiagram
-    actor "Usuário" as U
-    actor "Administrador" as A
-
-    U --> (Registrar-se)
-    U --> (Login)
-    U --> (Criar Enquete)
-    U --> (Votar em Enquete)
-    U --> (Visualizar Resultados)
-    U --> (Gerenciar Enquetes)
-
-    A --> (Gerenciar Usuários)
-    A --> (Gerenciar Enquetes)
-
+flowchart TD
+    U[Usuário] -->|Criar Conta| A(Registrar-se)
+    A -->|Fazer Login| B(Fazer Login)
+    B -->|Acessar Plataforma| C(Plataforma de Enquetes)
+    
+    C -->|Criar Enquete| D(Criar Nova Enquete)
+    D -->|Adicionar Opções| E(Adicionar Opções à Enquete)
+    
+    C -->|Votar em Enquete| F(Votar em Enquete Existente)
+    F -->|Selecionar Opção| G(Escolher Opção e Confirmar Voto)
+    
+    C -->|Acompanhar Resultados| H(Visualizar Resultados das Enquetes)
+    
+    I[Criador da Enquete] -->|Gerenciar Enquetes| J(Gerenciar Enquetes dos Usuários)
+    J -->|Editar Enquete| K(Editar Detalhes da Enquete)
+    J -->|Excluir Enquete| L(Excluir Enquete)
+    
+    U -->|Editar Perfil| M(Atualizar Informações de Usuário)
+    U -->|Excluir Conta| N(Excluir Conta)
 ```
 <br><br><br><br><br>
 
