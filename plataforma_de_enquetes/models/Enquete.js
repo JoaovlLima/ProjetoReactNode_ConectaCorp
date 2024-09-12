@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const EnqueteSchema = new MongooseError.Schema({
+const EnqueteSchema = new mongoose.Schema({
   titulo: {
     type: String,
     required: true,
@@ -45,10 +45,10 @@ const EnqueteSchema = new MongooseError.Schema({
   },
   dataDeCriacao: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-const Enquete = mongoose.models.Enquete || mongoose.model("Enquete", EnqueteSchema);
+const Enquete = mongoose.model("Enquete", EnqueteSchema);
 
 export default Enquete;
