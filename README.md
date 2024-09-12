@@ -107,7 +107,7 @@ Ferramentas de Monitoramento: Utilize ferramentas de gestão de projetos, como J
 
 3. **Desafios de Integração: Riscos de Inconsistência e Sincronização Entre Frontend e Backend:** A integração entre o frontend (React/Next.js) e o backend (Node.js) pode enfrentar desafios significativos, especialmente em relação ao fluxo de autenticação e à manipulação das enquetes e votos. A comunicação entre o frontend e as APIs precisa ser sincronizada de maneira eficiente, especialmente na gestão de sessões, autenticação JWT e atualização de dados em tempo real, para garantir uma experiência de usuário fluida.
    
- **Mitigação:**
+   **Mitigação:**
 Padronização de APIs: Garanta que as APIs estejam bem documentadas e sigam padrões consistentes, como o uso de REST ou GraphQL. Isso facilita a integração e a comunicação entre frontend e backend.
 Testes Automatizados: Implemente testes automatizados para o frontend e o backend. Testes de integração garantirão que os endpoints da API estejam funcionando corretamente e que a comunicação com o frontend seja sincronizada.
 Gestão de Sessões: Utilize um sistema de gestão de sessão robusto, como JWT com renovação automática de tokens, garantindo que a autenticação funcione corretamente e sem problemas de sincronização.
@@ -116,7 +116,7 @@ WebSockets ou SSE (Server-Sent Events): Para atualizações de dados em tempo re
 
 3. **Segurança dos Dados: Vulnerabilidades em Autenticação, Proteção de Votos e Privacidade de Usuários:** A segurança dos dados é uma preocupação central em plataformas interativas. Com a funcionalidade de login/cadastro, é fundamental garantir que as senhas dos usuários sejam armazenadas com segurança, que a autenticação seja robusta (ex: usando JWT) e que as enquetes e votos sejam protegidos contra manipulação externa (como múltiplos votos fraudulentos ou ataques de injeção). Além disso, dados pessoais dos usuários, como e-mails, devem ser protegidos contra vazamentos.
    
-  **Mitigação:**
+   **Mitigação:**
 Criptografia de Senhas: Armazene as senhas dos usuários utilizando algoritmos de hash seguros, como bcrypt ou Argon2, e implemente políticas de senha forte.
 Autenticação Segura (JWT): Use tokens JWT com expiração curta e renovações controladas. Assegure-se de usar HTTPS para a troca segura de tokens e dados sensíveis.
 Proteção contra Votos Fraudulentos: Implemente restrições para impedir múltiplos votos por usuário, como limitar um voto por IP, ou usar cookies/sessões junto ao JWT para garantir unicidade. Também é útil usar mecanismos de validação, como captchas, para evitar automação de votos.
