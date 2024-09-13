@@ -34,8 +34,8 @@ const EnqueteSchema = new mongoose.Schema({
   },
   opcoes: [
     {
-      type: String,
-      required: true,
+      texto: { type: String, required: true },
+      votos: { type: Number, default: 0 },
     },
   ],
   usuarioId: {
@@ -49,6 +49,6 @@ const EnqueteSchema = new mongoose.Schema({
   },
 });
 
-const Enquete = mongoose.model("Enquete", EnqueteSchema);
+const Enquete = mongoose.models.Enquete || mongoose.model("Enquete", EnqueteSchema);
 
 export default Enquete;

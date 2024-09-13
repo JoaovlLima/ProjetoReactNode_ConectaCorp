@@ -1,94 +1,152 @@
-import express from "express";
 import Enquete from "@/models/Enquete";
-import User from "@/models/User";
+import connectMongo from "@/utils/dbConnect";
 
-const router = express.Router();
-
-// Adicionar uma nova enquete
-router.post("/enquetes", async (req, res) => {
+// Função para obter todas as enquetes
+export const getEnquete = async (req) => {
+  await connectMongo();
   try {
-    const { titulo, descricao, categoria, imagem, opcoes } = req.body;
-    const { userId } = req; // Verifique se userId está presente
+    const enquetes = await Enquete.find({ usuarioId: req.user.userId }); // Altere 'userId' para 'usuarioId'
+    return new Response(JSON.stringify({ enquetes }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: "Erro ao buscar enquetes" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+};
 
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "Usuário não encontrado" });
-    }
+export const addEnquete = async (req) => {
+  try {
+    const { titulo, descricao, categoria, imagem, opcoes } = await req.json();
+    const userId = req.user?.userId; // Garantir que userId está acessível
 
-    const novaEnquete = new Enquete({
+    console.log("Dados recebidos para criação de enquete:", {
       titulo,
       descricao,
       categoria,
       imagem,
       opcoes,
-      usuarioId: userId,
+      userId,
     });
 
-    await novaEnquete.save();
-    return res.status(201).json(novaEnquete);
-  } catch (error) {
-    return res.status(500).json({ message: "Erro ao criar enquete", error: error.message });
-  }
-});
+    if (!userId) {
+      throw new Error(
+        "Usuário não autenticado ou ID de usuário não encontrado"
+      );
+    }
 
-// Recuperar todas as enquetes
-router.get("/enquetes", async (req, res) => {
+    await connectMongo();
+
+    // Verificar e formatar `opcoes` para garantir que seja um array de objetos com `texto` e `votos`
+    const formattedOpcoes = Array.isArray(opcoes)
+      ? opcoes.map((opcao) => ({
+          texto: opcao.texto || "",
+          votos: opcao.votos || 0,
+        }))
+      : [];
+
+    console.log("Opções formatadas:", formattedOpcoes);
+
+    // Criar a nova enquete
+    const novaEnquete = new Enquete({
+      titulo,
+      descricao,
+      categoria,
+      imagem,
+      opcoes: formattedOpcoes,
+      usuarioId: userId, // Definindo usuário ID
+    });
+
+    const resultado = await novaEnquete.save();
+
+    console.log("Enquete criada com sucesso:", resultado);
+
+    return new Response(JSON.stringify({ enquete: resultado }), {
+      status: 201,
+    });
+  } catch (error) {
+    console.error("Erro ao criar enquete:", error);
+
+    return new Response(
+      JSON.stringify({
+        message: "Erro ao criar enquete",
+        error: error.message,
+      }),
+      { status: 500 }
+    );
+  }
+};
+
+
+
+
+
+// Função para atualizar uma enquete
+export const updateEnquete = async (id, userId, data) => {
+  await connectMongo(); // Conecta ao MongoDB
+
   try {
-    const enquetes = await Enquete.find().populate("usuarioId", "nome email");
-    return res.status(200).json(enquetes);
-  } catch (error) {
-    return res.status(500).json({ message: "Erro ao recuperar enquetes", error: error.message });
-  }
-});
+    const updatedEnquete = await Enquete.findOneAndUpdate(
+      { _id: id, usuarioId: userId }, // Utilize o 'userId' passado como argumento
+      data,
+      { new: true } // Retorna o documento atualizado
+    );
 
-// Atualizar uma enquete existente
-router.put("/enquetes", async (req, res) => {
+    if (!updatedEnquete) {
+      return null; // Retorna null se a enquete não for encontrada
+    }
+
+    return updatedEnquete; // Retorna o documento atualizado
+  } catch (error) {
+    console.error('Erro ao atualizar enquete:', error);
+    throw new Error('Erro ao atualizar enquete'); // Lança o erro para ser capturado na rota
+  }
+};
+
+// Função para deletar uma enquete
+export const deleteEnquete = async (req) => {
+  const url = new URL(req.url);
+  const id = url.searchParams.get("id");
+
+  console.log("ID da enquete a ser deletada:", id);
+  console.log("Usuário autenticado:", req.user); // Verifica se o usuário está correto
+
+  await connectMongo();
+
   try {
-    const { id, titulo, descricao, categoria, imagem, opcoes } = req.body;
-    const { userId } = req;
+    const deletedEnquete = await Enquete.findOneAndDelete({
+      _id: id,
+      usuarioId: req.user.userId,
+    });
 
-    const enquete = await Enquete.findById(id);
-    if (!enquete) {
-      return res.status(404).json({ message: "Enquete não encontrada" });
+    if (!deletedEnquete) {
+      return new Response(
+        JSON.stringify({ message: "Enquete não encontrada" }),
+        {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     }
 
-    if (enquete.usuarioId.toString() !== userId) {
-      return res.status(403).json({ message: "Usuário não autorizado" });
-    }
-
-    enquete.titulo = titulo || enquete.titulo;
-    enquete.descricao = descricao || enquete.descricao;
-    enquete.categoria = categoria || enquete.categoria;
-    enquete.imagem = imagem || enquete.imagem;
-    enquete.opcoes = opcoes || enquete.opcoes;
-
-    await enquete.save();
-    return res.status(200).json(enquete);
+    return new Response(
+      JSON.stringify({ message: "Enquete deletada com sucesso" }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao atualizar enquete", error: error.message });
+    console.error("Erro ao deletar enquete:", error);
+    return new Response(
+      JSON.stringify({ message: "Erro ao deletar enquete" }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
-});
-
-// Deletar uma enquete existente
-router.delete("/enquetes", async (req, res) => {
-  try {
-    const { id } = req.body;
-    const { userId } = req;
-
-    const enquete = await Enquete.findById(id);
-    if (!enquete) {
-      return res.status(404).json({ message: "Enquete não encontrada" });
-    }
-
-    if (enquete.usuarioId.toString() !== userId) {
-      return res.status(403).json({ message: "Usuário não autorizado" });
-    }
-
-    await Enquete.findByIdAndDelete(id);
-    return res.status(200).json({ message: "Enquete deletada com sucesso" });
-  } catch (error) {
-    return res.status(500).json({ message: "Erro ao deletar enquete", error: error.message });
-  }
-});
-
-export default router;
+};
