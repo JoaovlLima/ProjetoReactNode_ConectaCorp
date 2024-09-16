@@ -1,140 +1,165 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation"; // Certifique-se de que está importando `useParams`
+import Header from "@/app/components/Header";
+import Footer from "@/app/components/Footer";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-
-export default function EditPage({ params }) {
-  const router = useRouter(); 
-  const { id } = params;
-
+export default function EditEnquetePage() {
   const [enquete, setEnquete] = useState({
-    titulo: '',
-    descricao: '',
-    categoria: 'Nenhuma Categoria Selecionada',
-    imagem: '',
-    opcoes: [],
+    titulo: "",
+    descricao: "",
+    categoria: "",
+    imagem: "",
+    opcoes: [{ texto: "" }],
   });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const categorias = [
-    'Nenhuma Categoria Selecionada',
-    'Tecnologia',
-    'Entretenimento',
-    'Esportes',
-    'Viagens',
-    'Comida',
-    'Estilo de Vida',
-    'Moda e Beleza',
-    'Educação',
-    'Política',
-    'Saúde e Bem-Estar',
-    'Finanças e Economia',
-    'Curiosidades'
-  ];
+  const router = useRouter();
+  const { id } = useParams(); // Obtém o ID da URL
 
   useEffect(() => {
-    if (!id) return;
-
-    const fetchData = async () => {
+    const fetchEnquete = async () => {
       try {
-        const response = await fetch(`/api/enquetes/${id}`);
-        if (!response.ok) {
-          throw new Error('Enquete não encontrada');
-        }
-        const data = await response.json();
-        console.log('Dados recebidos:', data); // Log dos dados recebidos
-        setEnquete({
-          ...data,
-          opcoes: data.opcoes || [],
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(`/api/enquetes?id=${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
-        setLoading(false);
-      } catch (err) {
-        setError(`Erro ao carregar dados: ${err.message}`);
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.enquetes) {
+            setEnquete(data.enquetes[0]); // Supondo que seja um array de enquetes
+          }
+          setLoading(false);
+        } else {
+          console.error("Erro ao buscar a enquete");
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchEnquete();
   }, [id]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEnquete((prevEnquete) => ({ ...prevEnquete, [name]: value }));
+  };
 
-    try {
-      const token = localStorage.getItem('token'); // Ou de onde o token é armazenado
-      const response = await fetch(`/api/enquetes/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Inclua o token JWT no cabeçalho
-        },
-        body: JSON.stringify(enquete),
-      });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
 
-      if (!response.ok) {
-        throw new Error('Erro ao atualizar enquete');
-      }
+    const response = await fetch(`/api/enquetes?id=${id}`, {
+      // ID deve estar correto aqui
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        titulo: enquete.titulo,
+        descricao: enquete.descricao,
+        categoria: enquete.categoria,
+        imagem: enquete.imagem,
+        opcoes: enquete.opcoes,
+      }),
+    });
 
-      router.push('/enquetes');
-    } catch (error) {
-      setError(`Erro ao atualizar enquete: ${error.message}`);
+    if (response.ok) {
+      router.push("/enquetes");
+    } else {
+      console.error("Erro ao atualizar a enquete");
     }
   };
 
-  if (loading) return <p>Carregando...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) {
+    return <div>Carregando...</div>; // Exibe um indicador de carregamento
+  }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Título:
-        <input
-          type="text"
-          value={enquete.titulo || ''}
-          onChange={(e) => setEnquete({ ...enquete, titulo: e.target.value })}
-        />
-      </label>
-      <label>
-        Descrição:
-        <input
-          type="text"
-          value={enquete.descricao || ''}
-          onChange={(e) => setEnquete({ ...enquete, descricao: e.target.value })}
-        />
-      </label>
-      <label>
-        Categoria:
-        <select
-          value={enquete.categoria || 'Nenhuma Categoria Selecionada'}
-          onChange={(e) => setEnquete({ ...enquete, categoria: e.target.value })}
-        >
-          {categorias.map((categoria) => (
-            <option key={categoria} value={categoria}>
-              {categoria}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label>
-        Imagem:
-        <input
-          type="text"
-          value={enquete.imagem || ''}
-          onChange={(e) => setEnquete({ ...enquete, imagem: e.target.value })}
-        />
-      </label>
-      <label>
-        Opções (uma por linha):
-        <textarea
-          value={enquete.opcoes ? enquete.opcoes.join('\n') : ''}
-          onChange={(e) =>
-            setEnquete({ ...enquete, opcoes: e.target.value.split('\n') })
-          }
-        />
-      </label>
-      <button type="submit">Atualizar Enquete</button>
-    </form>
+    <div>
+      <Header />
+      <hr></hr>
+      <div className="container mt-5">
+        <h1>Editar Enquete</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group mb-3">
+            <label htmlFor="titulo">Título</label>
+            <input
+              type="text"
+              id="titulo"
+              name="titulo"
+              className="form-control"
+              value={enquete?.titulo || ""} // Usa um valor padrão vazio se enquete ou titulo for undefined
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group mb-3">
+            <label htmlFor="descricao">Descrição</label>
+            <textarea
+              id="descricao"
+              name="descricao"
+              className="form-control"
+              value={enquete?.descricao || ""}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group mb-3">
+            <label htmlFor="categoria">Categoria</label>
+            <input
+              type="text"
+              id="categoria"
+              name="categoria"
+              className="form-control"
+              value={enquete?.categoria || ""}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group mb-3">
+            <label htmlFor="imagem">URL da Imagem</label>
+            <input
+              type="text"
+              id="imagem"
+              name="imagem"
+              className="form-control"
+              value={enquete?.imagem || ""}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group mb-3">
+            <label>Opções</label>
+            {enquete?.opcoes?.length > 0 ? (
+              enquete.opcoes.map((opcao, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  className="form-control mb-2"
+                  value={opcao.texto || ""}
+                  onChange={(e) => {
+                    const newOpcoes = [...enquete.opcoes];
+                    newOpcoes[index].texto = e.target.value;
+                    setEnquete({ ...enquete, opcoes: newOpcoes });
+                  }}
+                />
+              ))
+            ) : (
+              <p>Nenhuma opção disponível</p> // Mensagem caso não haja opções
+            )}
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Atualizar Enquete
+          </button>
+        </form>
+      </div>
+      <Footer />
+    </div>
   );
 }

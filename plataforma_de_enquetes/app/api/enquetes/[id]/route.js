@@ -1,54 +1,39 @@
-// pages/api/enquetes/[id]/route.js
+import Enquete from "@/models/Enquete";
+import User from "@/models/User";
+import connectMongo from "@/utils/dbConnect";
 
-import { NextResponse } from 'next/server';
-import { getEnquete, updateEnquete } from '@/controllers/EnqueteController';
-import { jwtMiddleware } from "@/utils/middleware";
-
-// Função para lidar com o método GET
+// Handler para GET /api/enquetes/[id]
 export async function GET(req, { params }) {
-  const { id } = params; // Extraindo 'id' dos parâmetros
+  await connectMongo();
 
-  console.log('Buscando enquete com ID:', id); // Log do ID
+  const { id } = params;
 
   try {
-    const enquete = await getEnquete(id); // Verifica se o ID da enquete é passado para a função correta
+    // Buscar a enquete pelo ID
+    const enquete = await Enquete.findById(id).populate("usuarioId");
+
     if (!enquete) {
-      console.log('Enquete não encontrada');
-      return NextResponse.json({ message: 'Enquete não encontrada' }, { status: 404 });
+      return new Response(JSON.stringify({ error: "Enquete não encontrada" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
-    console.log('Enquete encontrada:', enquete);
-    return NextResponse.json(enquete, { status: 200 });
+    // Retorna as informações da enquete e do usuário que a criou
+    return new Response(
+      JSON.stringify({ enquete, usuario: enquete.usuarioId }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
-    console.error('Erro ao buscar enquete:', error);
-    return NextResponse.json({ message: 'Erro ao buscar enquete', error: error.message }, { status: 500 });
+    return new Response(
+      JSON.stringify({ error: "Erro ao buscar os detalhes da enquete" }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
-}
-
-// Função para lidar com o método PUT
-const updateEnqueteHandler = async (req) => {
-  const id = new URL(req.url).pathname.split('/').pop(); // Extrai o ID da URL
-
-  if (!id) {
-    return new Response(JSON.stringify({ message: 'ID não fornecido' }), { status: 400 });
-  }
-
-  try {
-    const body = await req.json();
-    const updatedEnquete = await updateEnquete(id, body); // Usa `updateEnquete` para atualizar a enquete
-
-    if (!updatedEnquete) {
-      return new Response(JSON.stringify({ message: 'Enquete não encontrada' }), { status: 404 });
-    }
-
-    return new Response(JSON.stringify(updatedEnquete), { status: 200 });
-  } catch (error) {
-    console.error('Erro ao atualizar enquete:', error);
-    return new Response(JSON.stringify({ message: 'Erro ao atualizar enquete', error: error.message }), { status: 500 });
-  }
-};
-
-// Aplica o middleware à rota PUT
-export async function PUT(req) {
-  return jwtMiddleware(updateEnqueteHandler)(req);
 }

@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&family=Poppins:ital,wght@1,600&display=swap');
+
+/* components/Footer.module.css */
+.footer {
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    letter-spacing: 1px;
+    color: black;
+    margin-top: 10%;
+}
+
+.footerContent {
+    background-color: #E1E9ED;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 3rem 3.5rem;
+}
+
+.footerContacts h2 {
+    margin-bottom: 0.75rem;
+}
+
+.footerSocialMedia {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.footerSocialMedia .footerLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    width: 2.5rem;
+    color: black;
+    border-radius: 50%;
+    transition: all 0.4s;
+    font-size: 1.8rem;
+    /* Define o tamanho dos ícones */
+}
+
+#instagram {
+    background: linear-gradient(#7f37c9, #ff2992, #ff9807);
+}
+
+#facebook {
+    background-color: #4267b3;
+}
+
+#twitter {
+    background-color: #3E8AFF;
+}
+
+.footerLink {
+    text-decoration: none;
+    color: inherit;
+    /* Garante que a cor dos ícones herde a cor do pai */
+}
+
+.footerSocialMedia .footerLink:hover {
+    opacity: 0.8;
+}
+
+.footerList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    list-style: none;
+}
+
+.footerList .footerLink {
+    color: black;
+    transition: all 0.4s;
+}
+
+.footerList .footerLink:hover {
+    color: #7f37c9;
+}
+
+.footerSubscribe {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.footerSubscribe p {
+    color: black;
+}
+
+.inputGroup {
+    display: flex;
+    align-items: center;
+    background-color: #F4F4F4;
+    /* Ajustado para uma cor de fundo mais visível */
+    border-radius: 4px;
+}
+
+.inputGroup input {
+    padding: 0.75rem;
+    width: 100%;
+    border: 1px solid #ccc;
+    /* Adicionado para um contorno visível */
+    border-radius: 4px 0 0 4px;
+    /* Ajuste para o contorno do botão */
+}
+
+.inputGroup button {
+    background-color: #7f37c9;
+    border: none;
+    color: white;
+    /* Ajustado para melhorar a legibilidade */
+    padding: 0 1.25rem;
+    font-size: 1.125rem;
+    height: 100%;
+    border-radius: 0 4px 4px 0;
+    /* Ajuste para combinar com o input */
+    cursor: pointer;
+    transition: all 0.4s;
+}
+
+.inputGroup:hover {
+    opacity: 0.8;
+}
+
+.footerCopyright {
+    display: flex;
+    justify-content: center;
+    background-color: #a1a5a7;
+    font-size: 0.9rem;
+    padding: 1.5rem;
+    font-weight: 100;
+}
+
+@media screen and (max-width: 768px) {
+    .footerContent {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+}
+
+@media screen and (max-width: 426px) {
+    .footerContent {
+        grid-template-columns: repeat(1, 1fr);
+        padding: 3rem 2rem;
+    }
+}

@@ -1,52 +1,114 @@
+/* Estilos gerais para telas grandes */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 20px;
-    background-color: #f5f5f5;
-    border-style: solid;
-    border-bottom-color: black;
-    border-width: 5px;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+}
+
+.logo {
+    flex: 1;
 }
 
 .logo img {
-    height: 40px;
+    height: 100px;
 }
 
 .fields {
     display: flex;
-    gap: 10px;
+    gap: 1rem;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
 }
 
-.fields input {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-/* Estilos para o link */
 .link {
-    display: inline-block;
-    padding: 5px 10px;
-
-    color: rgb(0, 0, 0);
     text-decoration: none;
-    border-radius: 4px;
+    color: #1DA1F2;
+    font-size: 20px;
+    margin-right: 1rem;
+    transition: font-size 0.3s ease; /* Suaviza a transição do tamanho da fonte */
 }
 
-.link:hover {
-    background-color: #005bb5;
+.logout {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
 }
 
-.logout button {
-    background-color: #f44336;
-    color: white;
-    padding: 8px 16px;
+.logoutBtn {
+    background-color: #dc3545;
     border: none;
-    border-radius: 4px;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
     cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.3s ease, font-size 0.3s ease;
 }
 
-.logout button:hover {
-    background-color: #d32f2f;
+.logoutBtn:hover {
+    background-color: #c82333;
+}
+
+/* Responsividade: ajuste de tamanho de fontes para telas menores */
+@media (max-width: 1200px) {
+    .logo img {
+        height: 90px; /* Diminui o tamanho da logo */
+    }
+
+    .link {
+        font-size: 18px; /* Diminui um pouco as fontes dos links */
+    }
+
+    .logoutBtn {
+        font-size: 14px; /* Diminui o botão de logout */
+    }
+}
+
+@media (max-width: 992px) {
+    .logo img {
+        height: 80px; /* Tamanho menor da logo */
+    }
+
+    .link {
+        font-size: 16px; /* Diminui mais o tamanho das fontes */
+    }
+
+    .logoutBtn {
+        font-size: 13px; /* Botão de logout mais compacto */
+    }
+}
+
+@media (max-width: 768px) {
+    .logo img {
+        height: 70px; /* Diminui mais a logo */
+    }
+
+    .link {
+        font-size: 14px; /* Ajuste de tamanho para telas menores */
+    }
+
+    .logoutBtn {
+        font-size: 12px; /* Botão de logout ainda menor */
+    }
+}
+
+@media (max-width: 576px) {
+    .logo img {
+        height: 60px; /* Logo mais compacta */
+    }
+
+    .link {
+        font-size: 12px; /* Tamanho das fontes dos links bem ajustado para telas pequenas */
+        margin-right: 0.5rem;
+    }
+
+    .logoutBtn {
+        font-size: 11px; /* Botão menor, adequado para smartphones */
+        padding: 0.3rem 0.8rem;
+    }
 }

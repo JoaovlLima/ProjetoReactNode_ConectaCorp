@@ -1,11 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 /* Estilos da página principal */
 .container {
     display: flex;
     color: black;
+    flex-wrap: wrap;
 }
-
-
-
 
 /* Estilos para a sidebar à esquerda */
 .sidebar {
@@ -15,10 +16,18 @@
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    /* Ajuste para empilhar perfil e histórico */
     height: 900px;
-    border-style: solid;
-    border-color: green;
+    position: relative;
+}
+
+.sidebar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 100%;
+    background-color: #17BF63;
 }
 
 /* Contêiner para a imagem e informações */
@@ -33,7 +42,6 @@
     height: 100px;
     border-radius: 50%;
     margin-right: 20px;
-    /* Espaçamento entre a imagem e as informações */
 }
 
 /* Estilos para as informações do perfil */
@@ -43,10 +51,14 @@
 }
 
 .info h2 {
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
     font-size: 17px;
 }
 
 .info p {
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
     font-size: 16px;
 }
 
@@ -56,6 +68,7 @@
 }
 
 .history h3 {
+    font-family: 'Roboto', sans-serif;
     margin-bottom: 10px;
     font-size: 30px;
 }
@@ -70,6 +83,7 @@
 }
 
 .section h4 {
+    font-family: 'Roboto', sans-serif;
     font-size: 22px;
     margin-bottom: 10px;
 }
@@ -89,13 +103,12 @@
     color: #1DA1F2;
     border-style: solid;
     border-color: #1DA1F2;
-
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
 }
 
-
 .itemIcon {
-    width: 24px;
-    height: 24px;
+    width: 40px;
     margin-right: 10px;
 }
 
@@ -134,7 +147,7 @@
     margin-left: 10px;
     padding: 10px 20px;
     border: none;
-    background-color: green;
+    background-color: #657786;
     color: white;
     cursor: pointer;
     border-radius: 4px;
@@ -149,9 +162,10 @@
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    width: 35%;
+    width: 100%;
     align-items: center;
     text-align: center;
+    border-color: #17BF63;
 }
 
 .card h2 {
@@ -162,7 +176,6 @@
     width: 100%;
     height: 150px;
     object-fit: cover;
-
 }
 
 .cardContent {
@@ -174,19 +187,24 @@
     font-size: 20px;
     margin: 0;
     margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
 }
 
 .cardDescription {
     font-size: 16px;
-    color: #666;
+    color: #657786;
     margin: 0;
     margin-bottom: 15px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
 }
 
 .cardButton {
     align-self: flex-end;
     padding: 10px 20px;
     border: none;
+    margin: 5px;
     background-color: green;
     color: white;
     border-radius: 4px;
@@ -197,9 +215,183 @@
     border: none;
     height: 1px;
     background-color: green;
-    /* Cor da linha horizontal */
     margin: 20px 0;
-    /* Espaçamento vertical */
     width: 100%;
-    /* Ocupa toda a largura da div */
+}
+
+/* Estilos para o modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.confirmButton {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.cancelButton {
+    background-color: #ccc;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.deleteButton {
+    padding: 10px 20px;
+    border: none;
+    margin: 5px;
+    background-color: rgb(255, 0, 0);
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Botão de editar perfil */
+.editButton {
+    border: 1px solid #ffc107;
+    background-color: #ffc107;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão de excluir perfil */
+.deleteButton {
+    border: 1px solid #dc3545;
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Adiciona um espaço entre os botões e o restante do conteúdo */
+.info button {
+    margin-bottom: 10px;
+}
+
+.enquete-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.verMaisButton {
+    padding: 10px 20px;
+    background-color: #1DA1F2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.verMaisButton:hover {
+    background-color: #0056b3;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+    .sidebar {
+        width: 35%;
+    }
+
+    .mainContent {
+        width: 65%;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 20px;
+    }
+
+    .mainContent {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .mainHeader h1 {
+        font-size: 28px;
+    }
+
+    .cardTitle {
+        font-size: 18px;
+    }
+
+    .cardDescription {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        padding: 10px;
+    }
+
+    .avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    .mainHeader h1 {
+        font-size: 24px;
+    }
+
+    .controls input {
+        padding: 8px;
+    }
+
+    .controls button {
+        padding: 8px 16px;
+    }
+
+    .cardTitle {
+        font-size: 16px;
+    }
+
+    .cardDescription {
+        font-size: 12px;
+    }
+
+    .verMaisButton {
+        padding: 8px 16px;
+    }
 }
